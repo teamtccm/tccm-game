@@ -504,7 +504,7 @@
         .boss-modal-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
 
         .boss-card {
-            flex: 1; min-width: 250px; max-width: 380px;
+            flex: 1; min-width: 220px; max-width: 290px;
             border-radius: 18px; padding: 18px 16px; cursor: pointer;
             display: flex; flex-direction: column; align-items: center; text-align: center;
             transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative;
@@ -525,6 +525,12 @@
             border-color: #00D7FF !important;
             box-shadow: 0 0 35px rgba(0, 215, 255, 0.6) !important;
             background: rgba(5, 25, 48, 0.95) !important;
+            transform: translateY(-3px) scale(1.01);
+        }
+        .boss-card.cophuong-boss.selected {
+            border-color: #FF69B4 !important;
+            box-shadow: 0 0 35px rgba(255, 105, 180, 0.65) !important;
+            background: rgba(30, 10, 25, 0.95) !important;
             transform: translateY(-3px) scale(1.01);
         }
 
@@ -1897,6 +1903,13 @@
                 name: 'THẦY TRƯỜNG',
                 img: 'images/characters/char_thaytruong.jpg?v=6',
                 skill: '⚽ TIỀN ĐẠO MEDIA'
+            },
+            cophuong: {
+                id: 'cophuong',
+                subject: 'GV CHỦ NHIỆM',
+                name: 'CÔ PHƯƠNG',
+                img: 'images/characters/char_cophuong.jpg?v=1',
+                skill: '🌸 QUYỀN LỰC TỐI THƯỢNG · ĐIỂM DANH & HỌC VỤ'
             }
         };
 
@@ -1939,7 +1952,7 @@
                 count: 14,
                 prefix: 'images/mode_thuyettrinh/bitis_slides/slide_',
                 suffix: '.png',
-                recommendedBoss: 'content'
+                recommendedBoss: 'cophuong'
             },
             custom: {
                 id: 'custom',
@@ -1971,6 +1984,8 @@
                 currentSelectedDeckId = 'pushpull';
             } else if(bossKey === 'media'){
                 currentSelectedDeckId = 'cocoon';
+            } else if(bossKey === 'cophuong'){
+                currentSelectedDeckId = 'bitis';
             }
             updateBossModalUI();
         }
@@ -2023,7 +2038,7 @@
 
         function updateBossModalUI(){
             // Highlight Boss card
-            ['content', 'media'].forEach(k => {
+            ['content', 'media', 'cophuong'].forEach(k => {
                 const card = document.getElementById(`bossCard_${k}`);
                 const badge = document.getElementById(`badge_${k}`);
                 const isSel = (k === selectedPresentationBoss);
@@ -2042,7 +2057,7 @@
             const deck = slideRepository[currentSelectedDeckId] || slideRepository.cocoon;
             const summaryEl = document.getElementById('bossSelectSummaryTxt');
             if(summaryEl){
-                summaryEl.innerHTML = `ĐANG CHỌN: <span style="color:${b.id==='content'?'#FF8800':'#00D7FF'};font-weight:900;">${b.name} (${b.subject})</span> · BỘ SLIDE: <span style="color:#FFD700;font-weight:900;">${deck.name} (${deck.count} TRANG)</span>`;
+                summaryEl.innerHTML = `ĐANG CHỌN: <span style="color:${b.id==='content'?'#FF8800':(b.id==='cophuong'?'#FF69B4':'#00D7FF')};font-weight:900;">${b.name} (${b.subject})</span> · BỘ SLIDE: <span style="color:#FFD700;font-weight:900;">${deck.name} (${deck.count} TRANG)</span>`;
             }
         }
 
@@ -4630,6 +4645,30 @@
                     </div>
                     <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:10.5px;font-weight:800;color:#00FF66;letter-spacing:0.5px;">
                         ⚽ TIỀN ĐẠO MEDIA · SÚT PHẢN BIỆN CHÁY LƯỚI
+                    </div>
+                </div>
+
+                <!-- BOSS 3: CÔ PHƯƠNG (GIÁO VIÊN CHỦ NHIỆM) -->
+                <div class="boss-card cophuong-boss" id="bossCard_cophuong" onclick="chooseBossCard('cophuong')">
+                    <div style="position:absolute;top:10px;right:12px;background:#FF69B4;color:#FFF;font-size:9.5px;font-weight:900;padding:2px 8px;border-radius:10px;display:none;letter-spacing:0.5px;box-shadow:0 0 10px #FF69B4;" id="badge_cophuong">✓ ĐÃ CHỌN</div>
+                    
+                    <div style="background:linear-gradient(135deg,#FF69B4,#9400D3);color:#FFF;font-size:10px;font-weight:900;padding:3px 12px;border-radius:12px;letter-spacing:1px;margin-bottom:8px;box-shadow:0 0 10px rgba(255,105,180,0.5);text-transform:uppercase;">
+                        ⚔ BOSS GV CHỦ NHIỆM
+                    </div>
+                    <div style="width:95px;height:95px;border-radius:50%;border:2.5px solid #FF69B4;overflow:hidden;margin-bottom:8px;box-shadow:0 0 20px rgba(255,105,180,0.45);background:#000;">
+                        <img src="images/characters/char_cophuong.jpg?v=1" alt="Cô Phương" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-weight:900;font-size:19px;color:#FF69B4;letter-spacing:1px;margin-bottom:2px;text-shadow:0 0 10px rgba(255,105,180,0.6);">
+                        CÔ PHƯƠNG
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:10.5px;font-weight:800;color:#FFAEC9;margin-bottom:8px;letter-spacing:0.8px;">
+                        ★ QUYỀN LỰC TỐI THƯỢNG · GVCN ★
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:11px;color:#FFE4E1;line-height:1.4;margin-bottom:8px;font-style:italic;background:rgba(0,0,0,0.35);padding:6px 10px;border-radius:8px;border-left:3px solid #FF69B4;width:100%;box-sizing:border-box;">
+                        "Hôm nay nhóm nào chưa nộp slide, ai vắng thì ở lại gặp cô!"
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:10.5px;font-weight:800;color:#FFD700;letter-spacing:0.5px;">
+                        🌸 ÁNH MẮT DỊU DÀNG · SOLE ĐIỂM DANH TẬN GỐC
                     </div>
                 </div>
             </div>
