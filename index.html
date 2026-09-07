@@ -493,7 +493,7 @@
         .boss-modal-container {
             background: rgba(9, 14, 30, 0.98);
             border: 2.5px solid #00D7FF; border-radius: 24px;
-            padding: 26px 30px; max-width: 900px; width: 92%; max-height: 88vh;
+            padding: 24px 26px; max-width: 960px; width: 92%; max-height: 88vh;
             overflow-y: auto; overflow-x: hidden; text-align: center;
             box-shadow: 0 0 50px rgba(0, 215, 255, 0.35), 0 20px 60px rgba(0,0,0,0.8);
             position: relative; box-sizing: border-box;
@@ -530,7 +530,7 @@
 
         /* Thẻ kho dữ liệu slide */
         .slide-deck-card {
-            flex: 1; min-width: 185px; max-width: 210px;
+            flex: 1; min-width: 155px; max-width: 180px;
             border-radius: 14px; padding: 12px 10px; cursor: pointer;
             display: flex; flex-direction: column; align-items: center; text-align: center;
             transition: all 0.18s ease; position: relative;
@@ -1931,6 +1931,16 @@
                 suffix: '.png',
                 recommendedBoss: 'content'
             },
+            bitis: {
+                id: 'bitis',
+                name: "BITI'S HUNTER",
+                subject: 'MARKETING TRUYỀN THỐNG',
+                desc: 'Đi Để Trở Về & Tái định vị thương hiệu',
+                count: 14,
+                prefix: 'images/mode_thuyettrinh/bitis_slides/slide_',
+                suffix: '.png',
+                recommendedBoss: 'content'
+            },
             custom: {
                 id: 'custom',
                 name: 'BỘ SLIDE CỦA BẠN',
@@ -2022,7 +2032,7 @@
             });
 
             // Highlight Slide Deck card
-            ['cocoon', 'dmx', 'pushpull', 'custom'].forEach(d => {
+            ['cocoon', 'dmx', 'pushpull', 'bitis', 'custom'].forEach(d => {
                 const card = document.getElementById(`deckCard_${d}`);
                 if(card) card.classList.toggle('selected', d === currentSelectedDeckId);
             });
@@ -4682,7 +4692,23 @@
                     </div>
                 </div>
 
-                <!-- DECK 4: CUSTOM UPLOADED -->
+                <!-- DECK 4: BITI'S HUNTER (MKT TRUYỀN THỐNG) -->
+                <div class="slide-deck-card" id="deckCard_bitis" onclick="chooseSlideDeck('bitis')">
+                    <div class="slide-deck-thumb">
+                        <img src="images/mode_thuyettrinh/bitis_slides/slide_1.png" alt="Biti's Hunter Slides">
+                    </div>
+                    <div style="background:rgba(255,87,34,0.18);color:#FF5722;font-size:9px;font-weight:900;padding:2px 6px;border-radius:4px;margin-bottom:4px;border:1px solid rgba(255,87,34,0.4);letter-spacing:0.5px;">
+                        14 SLIDE · MKT TRUYỀN THỐNG
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:900;color:#FFF;margin-bottom:2px;line-height:1.25;">
+                        BITI'S HUNTER
+                    </div>
+                    <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:10px;color:#FFCCBC;line-height:1.3;margin-top:auto;">
+                        Đi Để Trở Về & Tái định vị thương hiệu
+                    </div>
+                </div>
+
+                <!-- DECK 5: CUSTOM UPLOADED -->
                 <div class="slide-deck-card" id="deckCard_custom" onclick="chooseSlideDeck('custom')" style="border-style:dashed;">
                     <div class="slide-deck-thumb" id="customThumbBox" style="background:linear-gradient(135deg,#121b2d,#1a2840);">
                         <span style="font-size:28px;">📁</span>
