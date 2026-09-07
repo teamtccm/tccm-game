@@ -1511,8 +1511,8 @@
             { key: "begautruc", name: "BÉ GẤU TRÚC", cls: "★ DÂN CHƠI KHÓI THUỐC & CAFE ★", str: 99, int: 95, spd: 97, mkt: 99, crt: 99, lck: 94, skill: "☕🚬 HẮC KHÓI CÀ PHÊ LIÊN HOÀN", img: "images/characters/char_begautruc.jpg", selectable: true },
             { key: "tung", name: "TÙNG LẨU NƯỚNG", cls: "★ ĐẦU BẾP LẨU NƯỚNG CẤP 2 ★", str: 94, int: 92, spd: 96, mkt: 95, crt: 98, lck: 97, skill: "🍲🍢 ĐẠI CHIẾN NỒI LẨU SIÊU CAY", img: "images/characters/char_tung.jpg", selectable: true },
             { key: "dungsenpai", name: "DŨNG SENPAI", cls: "★ BẬC THẦY NÓI ĐẠO LÝ HỌC ĐƯỜNG ★", str: 90, int: 99, spd: 95, mkt: 98, crt: 97, lck: 99, skill: "📜✨ VẠN LỜI ĐẠO LÝ - THỨC TỈNH NHÂN SINH", img: "images/characters/char_dungsenpai.jpg", selectable: true },
-            { key: "tranlambo", name: "TRẦN LÂM BÒ", cls: "★ SIÊU SAYAN MŨM MĨM ★", str: 100, int: 88, spd: 90, mkt: 94, crt: 99, lck: 95, skill: "💥⚡ SIÊU SAYAN KAMEHAMEHA", img: "images/characters/char_bo.jpg", selectable: true },
-            { key: "haify", name: "HAIFY", cls: "★ PHÙ THỦY ÂM THANH & SÁNG TẠO ★", str: 95, int: 96, spd: 98, mkt: 96, crt: 99, lck: 95, skill: "🎧⚡ SÓNG ÂM BEATDROP CỰC CĂNG", img: "images/characters/char_haify.jpg", selectable: true }
+            { key: "tranlambo", name: "TRẦN LÂM BÒ", cls: "★ SIÊU SAYAN MŨM MĨM ★", str: 100, int: 88, spd: 90, mkt: 94, crt: 99, lck: 95, skill: "💥⚡ SIÊU SAYAN KAMEHAMEHA", img: "images/characters/char_bo.jpg?v=27", selectable: true },
+            { key: "haify", name: "HAIFY", cls: "★ PHÙ THỦY ÂM THANH & SÁNG TẠO ★", str: 95, int: 96, spd: 98, mkt: 96, crt: 99, lck: 95, skill: "🎧⚡ SÓNG ÂM BEATDROP CỰC CĂNG", img: "images/characters/char_haify.jpg?v=27", selectable: true }
         ];
 
         let selectedChar=0, currentScreen='menu', menuIndex=0, charConfirmed=true, countdownTimer=null;
@@ -2277,7 +2277,7 @@
                 cls: "★ SIÊU CẤP SAYAN MŨM MĨM · KAMEHAMEHA ★",
                 str: 100, int: 88, spd: 90, mkt: 94, crt: 99, lck: 95,
                 skill: "💥⚡ SIÊU SAYAN KAMEHAMEHA CỰC ĐẠI",
-                img: "images/characters/char_bo.jpg"
+                img: "images/characters/char_bo.jpg?v=27"
             },
             {
                 key: "haify",
@@ -2285,7 +2285,7 @@
                 cls: "★ PHÙ THỦY ÂM THANH & SÁNG TẠO ★",
                 str: 95, int: 96, spd: 98, mkt: 96, crt: 99, lck: 95,
                 skill: "🎧⚡ SÓNG ÂM BEATDROP CỰC CĂNG",
-                img: "images/characters/char_haify.jpg"
+                img: "images/characters/char_haify.jpg?v=27"
             }
         ];
 
@@ -2863,7 +2863,7 @@
         // Helper: Animation 4 frame
         let soloAnimTimers = {};
         let soloAnimCallbacks = {}; // Lưu callback đang chờ để KHÔNG BAO GIỜ bị mất
-        const SPRITE_VER = '?v=26';
+        const SPRITE_VER = '?v=27_heroes';
         function playSprite4Frames(imgEl, charKey, actionName, onFinish, speed = 80){
             if(!imgEl) return;
             const elId = imgEl.id || 'unknown';
@@ -3803,7 +3803,7 @@
                 cls: "★ PRODUCER ĐA TÀI · HÁT TÌNH CA DỖ DÀNH ★",
                 str: 95, int: 96, spd: 98, mkt: 96, crt: 99, lck: 95,
                 skill: "🎧💕 BẬT BEAT LOFI ÊM DỊU HÁT NỊNH TAI NÓC NHÀ",
-                img: "images/characters/char_haify.jpg"
+                img: "images/characters/char_haify.jpg?v=27"
             }
         ];
 
