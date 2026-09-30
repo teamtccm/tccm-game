@@ -5589,7 +5589,20 @@
             if(currentDeckSlide < totalDeckSlides) {
                 goToDeckSlide(currentDeckSlide + 1);
             } else {
-                goToEndingScreen();
+                // Slide cuối → mở Vòng Quay May Mắn
+                if(typeof startLuckyWheelGame === 'function'){
+                    startLuckyWheelGame();
+                    // Lắng nghe phím Enter → chuyển sang đoạn kết
+                    window._wheelEnterHandler = function(e){
+                        if(e.key === 'Enter'){
+                            window.removeEventListener('keydown', window._wheelEnterHandler);
+                            goToEndingScreen();
+                        }
+                    };
+                    window.addEventListener('keydown', window._wheelEnterHandler);
+                } else {
+                    goToEndingScreen();
+                }
             }
         }
 
@@ -5651,23 +5664,20 @@
                         endingContainer.style.background = 'rgba(10,15,30,0.55)';
                         endingContainer.style.border = '2.5px solid #FFD700';
                         endingContainer.innerHTML = `
-                            <!-- 4 Góc đỏ viền vàng chuẩn thiết kế -->
+                            <!-- 4 Góc đỏ viền vàng -->
                             <div style="position:absolute;top:-6px;left:-6px;width:12px;height:12px;background:#FF0000;border:1.5px solid #FFD700;box-shadow:0 0 8px #FF0000;"></div>
                             <div style="position:absolute;top:-6px;right:-6px;width:12px;height:12px;background:#FF0000;border:1.5px solid #FFD700;box-shadow:0 0 8px #FF0000;"></div>
                             <div style="position:absolute;bottom:-6px;left:-6px;width:12px;height:12px;background:#FF0000;border:1.5px solid #FFD700;box-shadow:0 0 8px #FF0000;"></div>
                             <div style="position:absolute;bottom:-6px;right:-6px;width:12px;height:12px;background:#FF0000;border:1.5px solid #FFD700;box-shadow:0 0 8px #FF0000;"></div>
                             
-                            <!-- Logo cú vàng phát sáng -->
-                            <img src="images/common/team_logo.png" alt="Team Logo" style="width:110px;height:auto;filter:drop-shadow(0 0 15px rgba(255,215,0,0.9)) drop-shadow(0 0 25px rgba(255,136,0,0.6));margin-bottom:16px;">
-
-                            <p style="font-family:'Be Vietnam Pro',sans-serif;font-weight:900;font-size:26px;color:#FFD700;text-shadow:3px 3px 0 #8B0000,-1px -1px 0 #8B0000,0 0 25px rgba(255,215,0,0.6);line-height:1.45;margin-bottom:16px;letter-spacing:1.5px;text-transform:uppercase;text-align:center;">
-                                CẢM ƠN THẦY VÀ CÁC BẠN ĐÃ LẮNG NGHE<br>BÀI THUYẾT TRÌNH CỦA CHÚNG EM
+                            <p style="font-family:'Be Vietnam Pro',sans-serif;font-weight:900;font-size:28px;color:#FFD700;text-shadow:3px 3px 0 #8B0000,-1px -1px 0 #8B0000,0 0 25px rgba(255,215,0,0.6);line-height:1.5;margin-bottom:20px;letter-spacing:1.5px;text-transform:uppercase;text-align:center;">
+                                CẢM ƠN CÔ VÀ CÁC BẠN<br>ĐÃ LẮNG NGHE BÀI THUYẾT TRÌNH<br>CỦA NHÓM EM
                             </p>
                             
                             <div style="width:140px;height:3px;background:#FF0055;margin:0 auto 20px auto;box-shadow:0 0 12px #FF0055;"></div>
                             
-                            <div style="font-family:'Be Vietnam Pro',sans-serif;font-weight:900;font-size:23px;color:#FF8800;letter-spacing:6px;text-shadow:2px 2px 0 #000,0 0 20px rgba(255,136,0,0.8);margin-bottom:24px;text-transform:uppercase;text-align:center;">
-                                — TEAM TCCM —
+                            <div style="font-family:'Be Vietnam Pro',sans-serif;font-weight:900;font-size:18px;color:#FF8800;letter-spacing:4px;text-shadow:2px 2px 0 #000,0 0 20px rgba(255,136,0,0.8);margin-bottom:24px;text-transform:uppercase;text-align:center;">
+                                — LỚP 11A11 · THPT CAO BÁ QUÁT —
                             </div>
 
                             <button class="menu-btn primary selected" onclick="goBackToMenu()" style="max-width:300px;font-size:17px;padding:12px 32px;letter-spacing:3px;border:2px solid #FFD700;background:rgba(255,136,0,0.25);color:#FFF;box-shadow:0 0 20px rgba(255,136,0,0.4);">
