@@ -1283,11 +1283,10 @@
     <!-- MÀN 5: CẢNH KẾT THÚC (ENDING) -->
     <div class="screen hidden" id="endingScreen" style="background:transparent;">
         <!-- Video nền -->
-        <video class="bg-video" id="endingVideo" loop playsinline>
+        <video class="bg-video" id="endingVideo" loop playsinline autoplay muted>
+            <source src="images/mode_thuyettrinh/mixi_ending.mp4" type="video/mp4">
+            <source src="images/mode_thuyettrinh/ending_video.mp4" type="video/mp4">
             <source src="images/mode_quockhanh/quockhanh_ending.mp4?v=cut5s" type="video/mp4">
-            <source src="images/mode_thuyettrinh/Độ Mixi.mov" type="video/mp4">
-            <source src="images/mode_thuyettrinh/ending_video.mp4?v=mixi_cut22" type="video/mp4">
-            <source src="images/mode_quockhanh/bg-video.mp4" type="video/mp4">
         </video>
         <div class="overlay" style="background:radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);"></div>
 
@@ -3770,6 +3769,9 @@
                 if(scanlines) scanlines.style.display='block';
             }
 
+            const mbi = document.getElementById('mainBgImg');
+            if(mbi) mbi.style.display = (t === 'ending') ? 'none' : 'block';
+
             const hint=document.getElementById('bottomHint');
             if(hint){
                 hint.style.display=(t==='present'||t==='ending'||t==='soloGame'||t==='thuquy')?'none':'block';
@@ -5655,9 +5657,9 @@
                         `;
                     }
                 } else {
-                    // Chế độ Đẳng Cấp Thuyết Trình: Lắp đúng video Độ Mixi.mov + Bảng trong suốt tri ân Thầy Cô
+                    // Chế độ Đẳng Cấp Thuyết Trình: Lắp đúng video Độ Mixi MP4 chuẩn web
                     if(vid){
-                        vid.src = 'images/mode_thuyettrinh/Độ Mixi.mov';
+                        vid.src = 'images/mode_thuyettrinh/mixi_ending.mp4';
                         vid.load();
                     }
                     if(endingContainer){
@@ -5707,6 +5709,8 @@
                 vid.pause();
                 vid.currentTime = 0;
             }
+            const mbi = document.getElementById('mainBgImg');
+            if(mbi) mbi.style.display = 'block';
             activeHero = null;
             currentDeckSlide = 1;
             pixelateTransition(()=>{
