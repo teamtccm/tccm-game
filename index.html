@@ -1502,6 +1502,15 @@
                             <div class="dash-title">Giải Trí</div>
                         </div>
                     </button>
+                    <!-- Đồ Ăn Quanh Trường -->
+                    <button onclick="switchView('viewFoodNearby')" class="dash-card bg-gradient-to-br from-amber-500 via-orange-500 to-rose-600 shadow-xl shadow-orange-300/40">
+                        <span class="dash-badge bg-rose-500 text-white font-black"><i class="fa-solid fa-fire text-[9px]"></i> Quán Ngon</span>
+                        <div>
+                            <div class="dash-icon"><i class="fa-solid fa-bowl-food"></i></div>
+                            <div class="dash-title">Đồ Ăn Quanh Trường</div>
+                            <div class="dash-desc text-white/80 font-bold">Soi map & gọi món 11A11</div>
+                        </div>
+                    </button>
                     <!-- Cài Đặt -->
                     <button onclick="promptAdminThenSettings()" class="dash-card bg-gradient-to-br from-slate-600 via-gray-700 to-gray-900 shadow-xl shadow-gray-300/50">
                         <span class="dash-badge"><i class="fa-solid fa-lock text-[9px]"></i> Admin</span>
@@ -1773,6 +1782,87 @@
                     <p class="text-sm text-gray-500">Hôm nay là ngày nghỉ, hãy tranh thủ ôn bài hoặc thư giãn nhé 💪</p>
                 </div>
             </section>
+
+            <!-- VIEW: ĐỒ ĂN QUANH TRƯỜNG -->
+            <section id="viewFoodNearby" class="view-section">
+                <!-- Header -->
+                <div class="section-header-bar">
+                    <button onclick="switchView('viewDashboard')" class="back-btn" title="Quay lại">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <div class="text-center flex-1 px-3">
+                        <h2 class="view-page-title">Đồ Ăn Quanh Trường</h2>
+                        <p class="view-page-subtitle">Quán ngon gần THPT Cao Bá Quát · Lớp 11A11 📍</p>
+                    </div>
+                    <button onclick="openFoodCartModal()" class="relative w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-orange-300 hover:from-amber-400 hover:to-orange-500 active:scale-95 transition-all cursor-pointer text-lg" title="Xem giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                </div>
+
+                <!-- Slogan & Fast Notification -->
+                <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 border-2 border-amber-200/80 rounded-3xl p-4 mb-4 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shrink-0 shadow-md shadow-amber-300/50">
+                        🛵
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-xs font-black text-gray-900 leading-tight">Hôm nay lớp 11A11 ăn gì? 😋</div>
+                        <div class="text-[11px] text-gray-600 font-medium leading-relaxed mt-0.5">Quét radar quán gần, xem học sinh review & gọi món ship tận cổng hoặc lớp!</div>
+                    </div>
+                </div>
+
+                <!-- RADAR MAP CONTAINER TƯƠNG TÁC -->
+                <div id="foodRadarMapContainer" class="mb-5">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- TÌM KIẾM & BỘ LỌC THÔNG MINH -->
+                <div class="space-y-3 mb-5">
+                    <!-- Ô tìm kiếm -->
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="foodSearchInput" oninput="handleFoodSearch(this.value)" 
+                               placeholder="Tìm quán, trà sữa, bánh mì chảo, bún bò, cơm sườn..." 
+                               class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200/90 rounded-2xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-xs">
+                    </div>
+
+                    <!-- Filter Tabs phân loại -->
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar text-xs">
+                        <button onclick="setFoodCategory('all')" data-cat="all" class="food-cat-btn whitespace-nowrap px-3.5 py-2.5 rounded-2xl font-black transition-all cursor-pointer bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md shadow-orange-300/40">
+                            🌟 Tất cả quán
+                        </button>
+                        <button onclick="setFoodCategory('top')" data-cat="top" class="food-cat-btn whitespace-nowrap px-3.5 py-2.5 rounded-2xl font-bold bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-amber-400">
+                            ⭐ Top Đánh Giá Cao
+                        </button>
+                        <button onclick="setFoodCategory('snack_tea')" data-cat="snack_tea" class="food-cat-btn whitespace-nowrap px-3.5 py-2.5 rounded-2xl font-bold bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-amber-400">
+                            🧋 Trà Sữa & Ăn Vặt
+                        </button>
+                        <button onclick="setFoodCategory('rice_noodle')" data-cat="rice_noodle" class="food-cat-btn whitespace-nowrap px-3.5 py-2.5 rounded-2xl font-bold bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-amber-400">
+                            🍚 Cơm & Bún Phở
+                        </button>
+                        <button onclick="setFoodCategory('bread_fastfood')" data-cat="bread_fastfood" class="food-cat-btn whitespace-nowrap px-3.5 py-2.5 rounded-2xl font-bold bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-amber-400">
+                            🥖 Bánh Mì & Ăn Nhanh
+                        </button>
+                    </div>
+
+                    <!-- Sorting & Count Bar -->
+                    <div class="flex justify-between items-center px-1 text-[11px] font-bold text-gray-500">
+                        <span>Danh sách quán quanh trường</span>
+                        <div class="flex items-center gap-1.5">
+                            <span>Sắp xếp:</span>
+                            <select onchange="handleFoodSort(this.value)" class="bg-white border border-gray-200 rounded-xl px-2 py-1 text-[11px] font-bold text-gray-800 focus:outline-none">
+                                <option value="rating">⭐ Đánh giá cao nhất</option>
+                                <option value="distance">📍 Gần trường nhất</option>
+                                <option value="price">💰 Giá bình dân</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DANH SÁCH QUÁN ĂN (CARDS) -->
+                <div class="space-y-4 pb-20" id="foodShopListContainer">
+                    <!-- Rendered by JS -->
+                </div>
+            </section>
         
             </main>
         </div>
@@ -1780,7 +1870,234 @@
 
     <!-- MODALS CỦA QUẢN LÝ LỚP -->
 
-    
+    <!-- FLOATING CART BOTTOM BAR -->
+    <div id="foodCartFloatingBar" class="fixed bottom-5 left-0 right-0 z-40 hidden pointer-events-auto"></div>
+
+    <!-- MODAL: XEM MENU CHI TIẾT CỦA QUÁN -->
+    <div id="shopMenuModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-t-3xl w-full max-w-xl mx-auto p-5 max-h-[90vh] overflow-y-auto animate-[slideUp_0.3s_ease-out]">
+            <!-- Header Quán -->
+            <div class="flex justify-between items-start mb-4 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div id="shopMenuModalAvatar" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-3xl shadow-md">
+                        🧋
+                    </div>
+                    <div>
+                        <h3 id="shopMenuModalTitle" class="text-lg font-black text-gray-900 leading-tight">Tên Quán</h3>
+                        <div id="shopMenuModalSubtitle" class="text-xs text-gray-500 font-bold mt-0.5">30m · Cổng phụ</div>
+                        <div id="shopMenuModalBadge" class="text-[10px] font-extrabold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full inline-block mt-1">★ 4.9 · Quán ruột 11A11</div>
+                    </div>
+                </div>
+                <button onclick="closeModal('shopMenuModal')" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Địa chỉ & Hotline -->
+            <div class="bg-gray-50 rounded-2xl p-3 mb-4 text-xs space-y-1 border border-gray-100">
+                <div class="flex items-center gap-2 text-gray-700">
+                    <i class="fa-solid fa-location-dot text-amber-500"></i>
+                    <span id="shopMenuModalAddress" class="font-medium">Số 12 Cổ Bi, Gia Lâm</span>
+                </div>
+                <div class="flex items-center justify-between text-gray-700">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-phone text-emerald-600"></i>
+                        <span>Hotline: <b id="shopMenuModalPhone">0982345678</b></span>
+                    </div>
+                    <button onclick="openReviewModalForActiveShop()" class="text-xs text-indigo-600 hover:text-indigo-700 font-extrabold cursor-pointer flex items-center gap-1">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Viết đánh giá ⭐</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danh sách Món Ăn -->
+            <div class="mb-5">
+                <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open text-amber-500"></i>
+                    <span>Thực Đơn Món Ăn & Đồ Uống</span>
+                </h4>
+                <div id="shopMenuItemsList" class="space-y-2.5">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Nhận xét của học sinh 11A11 -->
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-comments text-amber-500"></i>
+                        <span>Học Sinh 11A11 Nhận Xét</span>
+                    </h4>
+                    <button onclick="openReviewModalForActiveShop()" class="text-[11px] font-bold text-amber-600 hover:underline cursor-pointer">
+                        + Thêm nhận xét
+                    </button>
+                </div>
+                <div id="shopMenuReviewsList" class="space-y-2">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: GIỎ HÀNG & GỌI MÓN (ORDER) -->
+    <div id="foodCartModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-t-3xl w-full max-w-xl mx-auto p-5 max-h-[90vh] overflow-y-auto animate-[slideUp_0.3s_ease-out]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-lg shadow-md shadow-amber-300">
+                        🛒
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-gray-900 leading-tight">Giỏ Hàng & Gọi Món</h3>
+                        <div id="foodCartShopName" class="text-xs text-amber-600 font-extrabold">Trà Sữa Cô Ba</div>
+                    </div>
+                </div>
+                <button onclick="closeModal('foodCartModal')" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-all cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Danh sách món đã chọn -->
+            <div class="mb-4">
+                <div class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-2">Món đã chọn</div>
+                <div id="foodCartItemsList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-gray-100 mt-2">
+                    <span class="text-sm font-bold text-gray-700">Tổng thanh toán:</span>
+                    <span id="foodCartTotalPrice" class="text-xl font-black text-amber-600">0đ</span>
+                </div>
+            </div>
+
+            <!-- Form Thông Tin Giao Nhận -->
+            <div class="space-y-3 bg-gray-50 rounded-2xl p-4 border border-gray-200/80 mb-4 text-xs">
+                <div class="font-black text-gray-800 text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-id-card text-indigo-600"></i>
+                    <span>Thông tin nhận đồ (Lớp 11A11)</span>
+                </div>
+
+                <!-- Chọn học sinh -->
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Người nhận (Chọn học sinh 11A11 hoặc tự điền):</label>
+                    <select id="foodOrderStudentSelect" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="">-- Chọn tên học sinh 11A11 --</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Số điện thoại liên hệ:</label>
+                        <input type="tel" id="foodOrderPhoneInput" placeholder="VD: 0987654321" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Địa điểm giao:</label>
+                        <select id="foodOrderLocationSelect" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <option value="Lớp 11A11 (Tầng 2 Nhà A - THPT Cao Bá Quát)">Lớp 11A11 (Tầng 2)</option>
+                            <option value="Cổng chính trường THPT Cao Bá Quát">Cổng chính trường</option>
+                            <option value="Cổng phụ trường THPT Cao Bá Quát">Cổng phụ trường</option>
+                            <option value="Sân bóng / Nhà thể chất">Sân bóng / Nhà thể chất</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Ghi chú cho quán (Đường/Đá/Cay...):</label>
+                    <input type="text" id="foodOrderNoteInput" placeholder="VD: Ít đường 50%, nhiều đá, tương ớt riêng..." class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500">
+                </div>
+            </div>
+
+            <!-- Các phương thức đặt món -->
+            <div class="space-y-2">
+                <div class="text-[11px] font-black text-gray-400 uppercase tracking-wider mb-1">Chọn cách gửi đơn cho quán</div>
+                
+                <div class="grid grid-cols-2 gap-2.5">
+                    <!-- Gọi điện thoại -->
+                    <button onclick="submitOrderCall()" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs shadow-md shadow-emerald-200 flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>1. Gọi Điện Thoại</span>
+                    </button>
+
+                    <!-- Nhắn Zalo / SMS -->
+                    <button onclick="submitOrderZalo()" class="py-3 px-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white font-black text-xs shadow-md shadow-blue-200 flex items-center justify-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-comment-dots"></i>
+                        <span>2. Gửi Zalo / SMS</span>
+                    </button>
+                </div>
+
+                <!-- Chuyển khoản QR -->
+                <button onclick="submitOrderQR()" class="w-full py-3 px-3 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 active:scale-95 text-white font-black text-xs shadow-lg shadow-orange-300 flex items-center justify-center gap-2 transition cursor-pointer mt-1">
+                    <i class="fa-solid fa-qrcode text-sm"></i>
+                    <span>3. Quét Mã QR Chuyển Khoản Trực Tiếp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ĐÁNH GIÁ QUÁN ĂN -->
+    <div id="foodReviewModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-t-3xl w-full max-w-xl mx-auto p-5 animate-[slideUp_0.3s_ease-out]">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                <h3 class="text-lg font-black text-gray-900">⭐ Đánh Giá Quán Ăn</h3>
+                <button onclick="closeModal('foodReviewModal')" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Quán đang đánh giá:</label>
+                    <div id="foodReviewShopName" class="font-black text-amber-600 text-sm">Tên Quán</div>
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Học sinh đánh giá:</label>
+                    <select id="foodReviewStudentSelect" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="">-- Chọn tên học sinh 11A11 --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Mức độ hài lòng (Số sao):</label>
+                    <select id="foodReviewRatingSelect" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs font-black text-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="5">⭐⭐⭐⭐⭐ 5 Sao - Cực kỳ ngon, quán ruột</option>
+                        <option value="4">⭐⭐⭐⭐ 4 Sao - Khá ngon, giá hợp lý</option>
+                        <option value="3">⭐⭐⭐ 3 Sao - Tạm ổn, ăn được</option>
+                        <option value="2">⭐⭐ 2 Sao - Cần cải thiện</option>
+                        <option value="1">⭐ 1 Sao - Không hài lòng</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Nhận xét của bạn:</label>
+                    <textarea id="foodReviewCommentInput" placeholder="VD: Trà sữa ngon, bác chủ quán thân thiện, bánh mì giòn rụm..." class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 resize-none"></textarea>
+                </div>
+                <button onclick="submitFoodReview()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-black rounded-2xl shadow-lg shadow-orange-300 active:scale-95 transition cursor-pointer">
+                    Gửi Đánh Giá Ngay ⭐
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: QR CHUYỂN KHOẢN GỌI MÓN -->
+    <div id="foodQrModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-t-3xl w-full max-w-xl mx-auto p-5 text-center animate-[slideUp_0.3s_ease-out]">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-black text-gray-900">💳 Quét Mã QR Thanh Toán</h3>
+                <button onclick="closeModal('foodQrModal')" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div id="foodQrCodeDisplay" class="my-3 flex justify-center">
+                <!-- QR Image -->
+            </div>
+            <div class="text-xs text-gray-500 font-medium">Số tiền: <b id="foodQrAmountDisplay" class="text-base text-amber-600 font-black">0đ</b></div>
+            <div id="foodQrDescDisplay" class="text-[11px] text-gray-400 mt-0.5">Thanh toán đơn ăn 11A11</div>
+            <div class="bg-amber-50 rounded-2xl p-3 border border-amber-200/60 text-xs text-amber-900 mt-3 font-semibold">
+                ✅ Sau khi chuyển khoản, bạn hãy gửi ảnh bill cho quán qua Zalo để quán ship đồ ngay nhé!
+            </div>
+            <button onclick="closeModal('foodQrModal')" class="w-full py-3 bg-gray-900 text-white font-bold text-xs rounded-2xl mt-4 active:scale-95 transition cursor-pointer">
+                Đã Hoàn Tất
+            </button>
+        </div>
+    </div>
+
     <!-- Modal: Tạo Nhiệm Vụ -->
     <div id="createTaskModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-t-3xl w-full max-w-xl mx-auto p-6 animate-[slideUp_0.3s_ease-out]">
@@ -5896,6 +6213,7 @@
     <script src="js/data.js?v=4.3"></script>
     <script src="js/quylop.js?v=4.3"></script>
     <script src="js/minigames.js?v=1.0"></script>
+    <script src="js/food.js?v=1.0"></script>
 
 
     <!-- MODAL LỰA CHỌN CHẾ ĐỘ ĐẤU (BOT VÀ GHÉP TRẬN ONLINE) -->

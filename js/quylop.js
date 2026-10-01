@@ -219,6 +219,7 @@ function switchView(viewId) {
     if (viewId === "viewAttendance") renderAttendanceSessions();
     if (viewId === "viewGroups") renderGroupSessions();
     if (viewId === "viewOnlineClass") renderOnlineClasses();
+    if (viewId === "viewFoodNearby" && typeof renderFoodNearby === "function") renderFoodNearby();
     window.scrollTo({ top: 0, behavior: "smooth" });
     const mc = document.getElementById("mainContainer");
     if (mc) mc.scrollTop = 0;
