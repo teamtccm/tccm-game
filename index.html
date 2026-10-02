@@ -1885,80 +1885,34 @@
                     </button>
                     <div class="text-center flex-1 px-3">
                         <h2 class="view-page-title">Tập Thể Thao</h2>
-                        <p class="view-page-subtitle">Minh họa động tác chuẩn 4 nhóm cơ 💪</p>
+                        <p class="view-page-subtitle">Minh họa bài tập chuyển động GIF 💪</p>
                     </div>
-                    <button onclick="resetGymWorkoutTracker()" class="w-12 h-12 bg-white text-gray-700 hover:text-indigo-600 rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 active:scale-95 transition-all cursor-pointer text-lg" title="Đặt lại bộ đếm hiệp hôm nay">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </button>
-                </div>
-
-                <!-- Motivation / Stats Banner -->
-                <div class="bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 text-white p-4 sm:p-5 rounded-3xl shadow-xl relative overflow-hidden mb-5 border border-indigo-500/30">
-                    <div class="absolute -right-4 -bottom-4 text-white/10 text-9xl pointer-events-none">
-                        <i class="fa-solid fa-dumbbell"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500 text-gray-950 text-[10px] font-black uppercase tracking-wider">
-                                Lịch Tập Mỗi Ngày
-                            </span>
-                            <span class="text-[11px] text-purple-200 font-bold">
-                                4 Nhóm Cơ · 8 Bài Tập
-                            </span>
-                        </div>
-                        <h3 class="text-xl font-black text-white leading-tight">
-                            Rèn Luyện Cơ Thể Đều Đặn
-                        </h3>
-                        <p class="text-xs text-white/80 mt-1 leading-relaxed max-w-sm">
-                            Quan sát hình ảnh động GIF lặp đi lặp lại để nắm bắt chuẩn nhịp thở, góc cùi chỏ và chuyển động cơ bắp.
-                        </p>
-                        
-                        <!-- Quick Timer Buttons -->
-                        <div class="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
-                            <span class="text-[11px] font-bold text-white/70 flex items-center gap-1.5">
-                                <i class="fa-solid fa-stopwatch text-amber-400"></i> Bấm giờ nghỉ giữa hiệp:
-                            </span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="startGymRestTimer(30)" class="px-2.5 py-1 rounded-xl bg-white/15 hover:bg-white/30 text-white text-xs font-black transition-all cursor-pointer">
-                                    30s
-                                </button>
-                                <button onclick="startGymRestTimer(45)" class="px-2.5 py-1 rounded-xl bg-white/15 hover:bg-white/30 text-white text-xs font-black transition-all cursor-pointer">
-                                    45s
-                                </button>
-                                <button onclick="startGymRestTimer(60)" class="px-3 py-1 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-black shadow-md shadow-indigo-500/50 transition-all cursor-pointer">
-                                    60s
-                                </button>
-                                <button onclick="startGymRestTimer(90)" class="px-2.5 py-1 rounded-xl bg-white/15 hover:bg-white/30 text-white text-xs font-black transition-all cursor-pointer">
-                                    90s
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="w-10"></div>
                 </div>
 
                 <!-- TABS LỌC NHÓM CƠ -->
-                <div class="sticky top-0 z-20 bg-gray-50/95 backdrop-blur-md -mx-5 px-5 py-2.5 mb-4 border-b border-gray-200/60">
+                <div class="sticky top-0 z-20 bg-gray-50/95 backdrop-blur-md -mx-5 px-5 py-2 mb-4 border-b border-gray-200/60">
                     <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-                        <button onclick="filterGymCategory('all')" data-cat="all" class="gym-cat-btn whitespace-nowrap px-4 py-2.5 rounded-2xl font-black text-xs transition-all cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-300/40 scale-105">
+                        <button onclick="filterGymCategory('all')" data-cat="all" class="gym-cat-btn whitespace-nowrap px-4 py-2 rounded-2xl font-black text-xs transition-all cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-300/40 scale-105">
                             🌟 Tất cả (4 nhóm)
                         </button>
-                        <button onclick="filterGymCategory('nguc')" data-cat="nguc" class="gym-cat-btn whitespace-nowrap px-4 py-2.5 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
+                        <button onclick="filterGymCategory('nguc')" data-cat="nguc" class="gym-cat-btn whitespace-nowrap px-4 py-2 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
                             💥 Cơ Ngực
                         </button>
-                        <button onclick="filterGymCategory('vai')" data-cat="vai" class="gym-cat-btn whitespace-nowrap px-4 py-2.5 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
+                        <button onclick="filterGymCategory('vai')" data-cat="vai" class="gym-cat-btn whitespace-nowrap px-4 py-2 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
                             ⚡ Cơ Vai
                         </button>
-                        <button onclick="filterGymCategory('tay_sau')" data-cat="tay_sau" class="gym-cat-btn whitespace-nowrap px-4 py-2.5 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
+                        <button onclick="filterGymCategory('tay_sau')" data-cat="tay_sau" class="gym-cat-btn whitespace-nowrap px-4 py-2 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
                             🦾 Cơ Tay Sau
                         </button>
-                        <button onclick="filterGymCategory('lung')" data-cat="lung" class="gym-cat-btn whitespace-nowrap px-4 py-2.5 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
+                        <button onclick="filterGymCategory('lung')" data-cat="lung" class="gym-cat-btn whitespace-nowrap px-4 py-2 rounded-2xl font-bold text-xs bg-white text-gray-700 border border-gray-200 transition-all cursor-pointer hover:border-indigo-400">
                             🛡️ Cơ Lưng / Xô
                         </button>
                     </div>
                 </div>
 
                 <!-- DANH SÁCH BÀI TẬP (CONTAINER CARDS) -->
-                <div class="space-y-6 pb-24" id="gymCardsContainer">
+                <div class="space-y-5 pb-20" id="gymCardsContainer">
                     <!-- Rendered by js/gym.js -->
                 </div>
             </section>
@@ -1971,29 +1925,6 @@
 
     <!-- FLOATING CART BOTTOM BAR -->
     <div id="foodCartFloatingBar" class="fixed bottom-5 left-0 right-0 z-40 hidden pointer-events-auto"></div>
-
-    <!-- FLOATING REST TIMER BAR -->
-    <div id="gymTimerFloatingBar" class="fixed bottom-6 left-4 right-4 max-w-sm mx-auto z-50 hidden pointer-events-auto">
-        <div class="bg-gray-900/95 backdrop-blur-xl border-2 border-indigo-500/50 shadow-2xl rounded-2xl p-3.5 flex items-center justify-between text-white animate-bounce-subtle">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-lg">
-                    <i class="fa-solid fa-stopwatch animate-pulse"></i>
-                </div>
-                <div>
-                    <div class="text-[11px] font-bold text-indigo-300 uppercase tracking-wider">Thời gian nghỉ</div>
-                    <div class="text-xl font-black text-white" id="gymTimerCountdown">60s</div>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="startGymRestTimer(gymRestSecondsLeft + 15)" class="px-2.5 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition">
-                    +15s
-                </button>
-                <button onclick="stopGymRestTimer()" class="w-8 h-8 bg-rose-500 hover:bg-rose-600 rounded-xl flex items-center justify-center text-white text-xs font-black transition cursor-pointer">
-                    ✕
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL: XEM MENU CHI TIẾT CỦA QUÁN -->
     <div id="shopMenuModal" class="fixed inset-0 bg-black/60 z-50 hidden flex-col justify-end backdrop-blur-sm transition-opacity">
