@@ -3,7 +3,7 @@
  */
 
 const CONFIG = {
-    appName: "Quản Lý Lớp",
+    appName: "Công Việc Hằng Ngày",
     adminPassword: "1",
     settingsPassword: "1",
     bank: {

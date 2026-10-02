@@ -220,6 +220,7 @@ function switchView(viewId) {
     if (viewId === "viewGroups") renderGroupSessions();
     if (viewId === "viewOnlineClass") renderOnlineClasses();
     if (viewId === "viewFoodNearby" && typeof renderFoodNearby === "function") renderFoodNearby();
+    if (viewId === "viewGymWorkout" && typeof renderGymWorkout === "function") renderGymWorkout();
     window.scrollTo({ top: 0, behavior: "smooth" });
     const mc = document.getElementById("mainContainer");
     if (mc) mc.scrollTop = 0;
