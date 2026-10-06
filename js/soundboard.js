@@ -1,6 +1,6 @@
 /**
  * js/soundboard.js — Hệ thống Bàn Phím Sound 3D Instant & Truy Vết Vị Trí Nhạc
- * Phong cách Myinstants với nút bấm 3D bóng bẩy, nghe thử trực tiếp, thả tim và truy vết folder
+ * Nâng cấp: Nút 3D to rõ hơn, thanh Style tự bọc không bị khuất, chế độ xem 3D Pad & Thẻ Danh Sách
  */
 
 (function() {
@@ -12,7 +12,8 @@
         activeCategory: 'ALL',
         searchQuery: '',
         volume: 0.85,
-        selectedSound: null
+        selectedSound: null,
+        viewMode: 'grid' // 'grid' hoặc 'list'
     };
 
     // Load favorites from localStorage
@@ -81,7 +82,6 @@
                 updatePlayingUI(sound);
             }).catch(err => {
                 console.warn('Lỗi autoplay hoặc đường dẫn:', err);
-                // Thử fallback sang absPath nếu cần
                 SoundboardState.currentAudio.src = sound.relPath;
             });
         }
@@ -97,15 +97,28 @@
     };
 
     function updatePlayingUI(sound) {
-        // Remove active class from all buttons
+        // Reset all playing states
         document.querySelectorAll('.sb-btn').forEach(btn => btn.classList.remove('playing'));
         document.querySelectorAll('.sb-button-wrapper').forEach(w => w.classList.remove('is-playing'));
+        document.querySelectorAll('.sb-item').forEach(item => item.classList.remove('is-active-item'));
+        document.querySelectorAll('.sb-list-card').forEach(card => card.classList.remove('is-playing'));
+        document.querySelectorAll('.sb-list-play-btn i').forEach(icon => {
+            icon.className = 'fa-solid fa-play';
+        });
 
-        // Add to active
+        // Add to active grid item
         const btn = document.getElementById(`sb-btn-${sound.id}`);
         const wrapper = document.getElementById(`sb-wrapper-${sound.id}`);
+        const item = document.getElementById(`sb-item-${sound.id}`);
         if (btn) btn.classList.add('playing');
         if (wrapper) wrapper.classList.add('is-playing');
+        if (item) item.classList.add('is-active-item');
+
+        // Add to active list card
+        const listCard = document.getElementById(`sb-list-card-${sound.id}`);
+        const listIcon = document.getElementById(`sb-list-icon-${sound.id}`);
+        if (listCard) listCard.classList.add('is-playing');
+        if (listIcon) listIcon.className = 'fa-solid fa-pause';
 
         // Update floating player
         const player = document.getElementById('sbFloatingPlayer');
@@ -124,6 +137,11 @@
         SoundboardState.currentPlayingId = null;
         document.querySelectorAll('.sb-btn').forEach(btn => btn.classList.remove('playing'));
         document.querySelectorAll('.sb-button-wrapper').forEach(w => w.classList.remove('is-playing'));
+        document.querySelectorAll('.sb-item').forEach(item => item.classList.remove('is-active-item'));
+        document.querySelectorAll('.sb-list-card').forEach(card => card.classList.remove('is-playing'));
+        document.querySelectorAll('.sb-list-play-btn i').forEach(icon => {
+            icon.className = 'fa-solid fa-play';
+        });
 
         const playBtn = document.getElementById('sbPlayerPlayIcon');
         if (playBtn) playBtn.className = 'fa-solid fa-play';
@@ -152,7 +170,7 @@
 
     // Toggle Favorite
     window.toggleSbFavorite = function(event, id) {
-        event.stopPropagation();
+        if (event) event.stopPropagation();
         if (SoundboardState.favorites.has(id)) {
             SoundboardState.favorites.delete(id);
             showSbToast('💔 Đã bỏ khỏi danh sách Yêu Thích');
@@ -171,14 +189,27 @@
     };
 
     function updateFavoriteButtonUI(id) {
+        const isFav = SoundboardState.favorites.has(id);
+        // Grid button
         const heartBtn = document.getElementById(`sb-heart-${id}`);
         if (heartBtn) {
-            if (SoundboardState.favorites.has(id)) {
+            if (isFav) {
                 heartBtn.classList.add('favorited');
                 heartBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
             } else {
                 heartBtn.classList.remove('favorited');
                 heartBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+            }
+        }
+        // List button
+        const listHeartBtn = document.getElementById(`sb-list-heart-${id}`);
+        if (listHeartBtn) {
+            if (isFav) {
+                listHeartBtn.classList.add('favorited');
+                listHeartBtn.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            } else {
+                listHeartBtn.classList.remove('favorited');
+                listHeartBtn.innerHTML = '<i class="fa-regular fa-heart"></i>';
             }
         }
     }
@@ -223,16 +254,23 @@
         }
     };
 
+    // Copy track flag helper
+    window.copySbTrackFlag = function(id) {
+        const sound = SOUNDBOARD_DATA.find(s => s.id === id);
+        if (sound && sound.flag) {
+            copySbText(sound.flag, `🎬 Đã sao chép cờ: ${sound.flag}`);
+        }
+    };
+
     // Copy to clipboard utilities
-    window.copySbText = function(elementId, successMsg) {
-        const el = document.getElementById(elementId);
-        const text = el ? (el.value || el.textContent) : elementId;
+    window.copySbText = function(elementIdOrText, successMsg) {
+        const el = document.getElementById(elementIdOrText);
+        const text = el ? (el.value || el.textContent) : elementIdOrText;
         if (!text) return;
 
         navigator.clipboard.writeText(text).then(() => {
             showSbToast(successMsg || '📋 Đã sao chép thành công!');
         }).catch(() => {
-            // Fallback
             const ta = document.createElement('textarea');
             ta.value = text;
             document.body.appendChild(ta);
@@ -249,10 +287,9 @@
         const sound = SOUNDBOARD_DATA.find(s => s.id === id);
         if (!sound) return;
 
-        if (sound.link) {
+        if (sound.link && sound.link.startsWith('http')) {
             window.open(sound.link, '_blank');
         } else {
-            // Nếu không có link TikTok thì mở modal vị trí file
             window.openSbLocationModal(null, id);
         }
     };
@@ -296,6 +333,16 @@
         renderSoundboardGrid();
     };
 
+    // View Mode Switcher: 'grid' (3D Buttons) | 'list' (Detail Cards)
+    window.setSbViewMode = function(mode) {
+        SoundboardState.viewMode = mode;
+        const btnGrid = document.getElementById('sbBtnViewGrid');
+        const btnList = document.getElementById('sbBtnViewList');
+        if (btnGrid) btnGrid.classList.toggle('active', mode === 'grid');
+        if (btnList) btnList.classList.toggle('active', mode === 'list');
+        renderSoundboardGrid();
+    };
+
     function updateCategoryCountBadges() {
         const favCount = SoundboardState.favorites.size;
         const favBadge = document.getElementById('sbFavCountBadge');
@@ -321,7 +368,7 @@
         }
     }
 
-    // Render Grid
+    // Render Grid or List
     function renderSoundboardGrid() {
         const container = document.getElementById('sbGridContainer');
         if (!container) return;
@@ -350,72 +397,143 @@
         }
 
         if (filtered.length === 0) {
+            container.className = 'w-full py-16 text-center text-gray-400';
             container.innerHTML = `
-                <div class="col-span-full py-16 text-center text-gray-400">
-                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-800/80 flex items-center justify-center text-2xl text-gray-500">
-                        <i class="fa-solid fa-music-slash"></i>
-                    </div>
-                    <p class="font-bold text-gray-300">Không tìm thấy sound nào phù hợp</p>
-                    <p class="text-xs text-gray-500 mt-1">Hãy thử tìm từ khoá khác hoặc đổi chuyên mục</p>
+                <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-800/80 flex items-center justify-center text-2xl text-gray-500">
+                    <i class="fa-solid fa-music-slash"></i>
                 </div>
+                <p class="font-bold text-gray-300">Không tìm thấy sound nào phù hợp</p>
+                <p class="text-xs text-gray-500 mt-1">Hãy thử tìm từ khoá khác hoặc đổi chuyên mục</p>
             `;
             return;
         }
 
-        let html = '';
-        filtered.forEach(sound => {
-            const isFav = SoundboardState.favorites.has(sound.id);
-            const isPlaying = SoundboardState.currentPlayingId === sound.id;
-            const colorClass = sound.color || 'red';
+        // ==========================================
+        // CHẾ ĐỘ 1: BÀN PHÍM NÚT 3D (MYINSTANTS PAD)
+        // ==========================================
+        if (SoundboardState.viewMode === 'grid') {
+            container.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 pt-2';
+            let html = '';
+            filtered.forEach(sound => {
+                const isFav = SoundboardState.favorites.has(sound.id);
+                const isPlaying = SoundboardState.currentPlayingId === sound.id;
+                const colorClass = sound.color || 'red';
 
-            html += `
-                <div class="sb-item" id="sb-item-${sound.id}">
-                    <!-- 3D PUSH BUTTON (MYINSTANTS STYLE) -->
-                    <div class="sb-button-wrapper ${isPlaying ? 'is-playing' : ''}" 
-                         id="sb-wrapper-${sound.id}"
-                         onclick="togglePlaySound('${sound.id}')"
-                         title="Nhấp để nghe thử: ${sound.title}">
-                        <button class="sb-btn ${colorClass} ${isPlaying ? 'playing' : ''}" 
-                                id="sb-btn-${sound.id}">
-                        </button>
+                html += `
+                    <div class="sb-item ${isPlaying ? 'is-active-item' : ''}" id="sb-item-${sound.id}">
+                        <!-- 3D PUSH BUTTON (MYINSTANTS STYLE) -->
+                        <div class="sb-button-wrapper ${isPlaying ? 'is-playing' : ''}" 
+                             id="sb-wrapper-${sound.id}"
+                             onclick="togglePlaySound('${sound.id}')"
+                             title="Nhấp để nghe thử: ${sound.title}">
+                            <button class="sb-btn ${colorClass} ${isPlaying ? 'playing' : ''}" 
+                                    id="sb-btn-${sound.id}">
+                            </button>
+                        </div>
+
+                        <!-- SOUND TITLE -->
+                        <div class="sb-title" 
+                             onclick="openSbLocationModal(null, '${sound.id}')"
+                             title="${sound.title} (${sound.catName})">
+                            ${sound.title}
+                        </div>
+
+                        <!-- ACTION BUTTONS: [❤️] [🔗] [↗️] -->
+                        <div class="sb-actions">
+                            <!-- THẢ TIM -->
+                            <button class="sb-act-btn sb-act-heart ${isFav ? 'favorited' : ''}" 
+                                    id="sb-heart-${sound.id}"
+                                    onclick="toggleSbFavorite(event, '${sound.id}')"
+                                    title="${isFav ? 'Bỏ thích' : 'Thả tim để lưu vào Yêu Thích'}">
+                                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                            </button>
+
+                            <!-- TRUY VẾT LINK / FOLDER -->
+                            <button class="sb-act-btn sb-act-link" 
+                                    onclick="openSbLocationModal(event, '${sound.id}')"
+                                    title="Truy vết vị trí file MP3 & lấy cờ --nhac">
+                                <i class="fa-solid fa-link"></i>
+                            </button>
+
+                            <!-- MỞ TIKTOK / SHARE -->
+                            <button class="sb-act-btn sb-act-share" 
+                                    onclick="openSbTikTok(event, '${sound.id}')"
+                                    title="Mở video TikTok gốc">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </button>
+                        </div>
                     </div>
+                `;
+            });
+            container.innerHTML = html;
+        } 
+        // ==========================================
+        // CHẾ ĐỘ 2: THẺ DANH SÁCH CHI TIẾT (LIST CARDS)
+        // ==========================================
+        else {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-2';
+            let html = '';
+            filtered.forEach(sound => {
+                const isFav = SoundboardState.favorites.has(sound.id);
+                const isPlaying = SoundboardState.currentPlayingId === sound.id;
+                const colorClass = sound.color || 'blue';
+                const durStr = sound.duration ? `${Math.round(sound.duration)}s` : '';
 
-                    <!-- SOUND TITLE -->
-                    <div class="sb-title" 
-                         onclick="openSbLocationModal(null, '${sound.id}')"
-                         title="${sound.title} (${sound.catName})">
-                        ${sound.title}
+                html += `
+                    <div class="sb-list-card ${isPlaying ? 'is-playing' : ''}" id="sb-list-card-${sound.id}">
+                        <!-- Nút Play Tròn To -->
+                        <div class="sb-button-wrapper !w-12 !h-12 !p-1.5 flex-shrink-0" onclick="togglePlaySound('${sound.id}')">
+                            <button class="sb-btn ${colorClass} ${isPlaying ? 'playing' : ''} flex items-center justify-center text-white text-xs">
+                                <i id="sb-list-icon-${sound.id}" class="fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}"></i>
+                            </button>
+                        </div>
+
+                        <!-- Thông tin Sound -->
+                        <div class="flex-1 min-w-0 pr-2">
+                            <div class="text-xs font-bold text-white truncate cursor-pointer hover:text-cyan-400" 
+                                 onclick="openSbLocationModal(null, '${sound.id}')"
+                                 title="${sound.title}">
+                                ${sound.title}
+                            </div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[10px] font-semibold text-slate-400 truncate max-w-[140px]">
+                                    <i class="fa-solid fa-user-tag text-[9px] mr-0.5"></i> ${sound.author || 'TikTok'}
+                                </span>
+                                <span class="text-[9.5px] font-bold px-1.5 py-0.2 rounded-md bg-slate-800 text-cyan-400 border border-slate-700">
+                                    ${durStr || sound.catName}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Nút Thao tác -->
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <!-- Sao chép cờ --nhac -->
+                            <button onclick="copySbText('${sound.flag.replace(/"/g, '&quot;')}', '🎬 Đã sao chép cờ --nhac!')" 
+                                    class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-cyan-400 flex items-center justify-center text-xs transition border border-slate-700" 
+                                    title="Sao chép cờ: ${sound.flag}">
+                                <i class="fa-solid fa-terminal text-[10px]"></i>
+                            </button>
+
+                            <!-- Thả tim -->
+                            <button class="sb-act-btn sb-act-heart ${isFav ? 'favorited' : ''}" 
+                                    id="sb-list-heart-${sound.id}"
+                                    onclick="toggleSbFavorite(event, '${sound.id}')"
+                                    title="${isFav ? 'Bỏ thích' : 'Thả tim'}">
+                                <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                            </button>
+
+                            <!-- Truy vết -->
+                            <button class="sb-act-btn sb-act-link" 
+                                    onclick="openSbLocationModal(event, '${sound.id}')"
+                                    title="Truy vết folder & đường dẫn">
+                                <i class="fa-solid fa-link"></i>
+                            </button>
+                        </div>
                     </div>
-
-                    <!-- ACTION BUTTONS: [❤️] [🔗] [↗️] -->
-                    <div class="sb-actions">
-                        <!-- THẢ TIM -->
-                        <button class="sb-act-btn sb-act-heart ${isFav ? 'favorited' : ''}" 
-                                id="sb-heart-${sound.id}"
-                                onclick="toggleSbFavorite(event, '${sound.id}')"
-                                title="${isFav ? 'Bỏ thích' : 'Thả tim để lưu vào Yêu Thích'}">
-                            <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
-                        </button>
-
-                        <!-- TRUY VẾT LINK / FOLDER -->
-                        <button class="sb-act-btn sb-act-link" 
-                                onclick="openSbLocationModal(event, '${sound.id}')"
-                                title="Truy vết vị trí nhạc trong folder máy & lấy lệnh --nhac">
-                            <i class="fa-solid fa-link"></i>
-                        </button>
-
-                        <!-- MỞ TIKTOK / SHARE -->
-                        <button class="sb-act-btn sb-act-share" 
-                                onclick="openSbTikTok(event, '${sound.id}')"
-                                title="Mở video TikTok gốc chứa sound này">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-
-        container.innerHTML = html;
+                `;
+            });
+            container.innerHTML = html;
+        }
     }
 
     // Volume control
