@@ -2507,69 +2507,56 @@
 
                 <!-- SOUNDBOARD WRAPPER WITH DARK MYINSTANTS THEME -->
                 <div class="sb-container-dark rounded-3xl p-4 sm:p-5 shadow-2xl mb-24 border border-slate-800">
-                    <!-- Search & Quick Filter Bar -->
-                    <div class="mb-4 space-y-3">
-                        <div class="relative">
-                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                            <input type="text" id="sbSearchInput" oninput="handleSbSearch(this.value)" 
-                                   placeholder="Tìm sound, tên bài, ca sĩ, từ khoá..."
-                                   class="w-full bg-slate-900/90 text-white placeholder-slate-400 text-sm rounded-2xl pl-11 pr-10 py-3 border border-slate-700 focus:outline-none focus:border-cyan-400 transition shadow-inner">
-                            <button onclick="document.getElementById('sbSearchInput').value=''; handleSbSearch('');" 
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-slate-400 hover:text-white flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-xmark"></i>
+                    <!-- THANH ĐIỀU KHIỂN TINH GỌN (Tối ưu không gian để list nhạc hiện FULL) -->
+                    <div class="flex items-center justify-between mb-3 px-0.5">
+                        <!-- Badge thể loại đang chọn -->
+                        <div class="flex items-center gap-2">
+                            <span id="sbActiveCategoryBadge" class="text-xs font-black px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5 shadow-sm">
+                                <span id="sbActiveCatIcon">🌐</span> <span id="sbActiveCatName">Tất cả</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/30 text-white font-bold" id="sbActiveCatCount">119</span>
+                            </span>
+                            <span id="sbFilterResultCount" class="text-[11px] text-slate-400 hidden sm:inline">119 / 119 sound</span>
+                        </div>
+
+                        <!-- Nhóm nút: Tìm kiếm & Đổi kiểu xem 3D / List -->
+                        <div class="flex items-center gap-2">
+                            <!-- Nút Tìm Kiếm (Bấm vào mới hiện khung tìm kiếm tên bài hát hoặc chủ đề) -->
+                            <button onclick="toggleSbSearchPanel()" id="sbBtnToggleSearch" 
+                                    class="px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-cyan-400 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700/80 cursor-pointer shadow-sm active:scale-95" 
+                                    title="Bấm để tìm kiếm tên bài hát, chủ đề hoặc ca sĩ">
+                                <i class="fa-solid fa-magnifying-glass text-cyan-400 text-xs"></i>
+                                <span>Tìm kiếm</span>
                             </button>
-                        </div>
 
-                        <!-- Category Filter Pills (Auto wrap, 100% visible, large tap targets) -->
-                        <div>
-                            <div class="flex items-center justify-between mb-2 px-0.5">
-                                <span class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-shapes text-cyan-400 text-xs"></i> Style & Chuyên Mục:
-                                </span>
-                                <!-- View Mode Switcher: 3D Buttons or List View -->
-                                <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-700/70">
-                                    <button onclick="setSbViewMode('grid')" id="sbBtnViewGrid" class="sb-view-toggle-btn active" title="Dạng nút bấm 3D Instant">
-                                        <i class="fa-solid fa-gamepad"></i> Nút 3D
-                                    </button>
-                                    <button onclick="setSbViewMode('list')" id="sbBtnViewList" class="sb-view-toggle-btn" title="Dạng thẻ danh sách chi tiết">
-                                        <i class="fa-solid fa-list-ul"></i> Thẻ List
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="sb-tabs-wrap">
-                                <button onclick="filterSbCategory('ALL')" class="sb-cat-tab active" data-cat="ALL">
-                                    <span>🌐 Tất cả</span> <span class="sb-cat-num" id="sbTotalCountBadge">119</span>
+                            <!-- Chuyển đổi 3D / List -->
+                            <div class="flex items-center bg-slate-900/90 p-0.5 rounded-xl border border-slate-700/70">
+                                <button onclick="setSbViewMode('grid')" id="sbBtnViewGrid" class="sb-view-toggle-btn active !p-1.5 !px-2.5 !text-[11px]" title="Dạng nút bấm 3D Instant">
+                                    <i class="fa-solid fa-gamepad"></i>
                                 </button>
-                                <button onclick="filterSbCategory('FAVORITES')" class="sb-cat-tab" data-cat="FAVORITES">
-                                    <span>❤️ Yêu Thích</span> <span class="sb-cat-num" id="sbFavCountBadge">0</span>
-                                </button>
-                                <button onclick="filterSbCategory('01_Tin_Tuc_Giat_Gan_Cang_Thang')" class="sb-cat-tab" data-cat="01_Tin_Tuc_Giat_Gan_Cang_Thang">
-                                    <span>🚨 Giật Gân</span> <span class="sb-cat-num">11</span>
-                                </button>
-                                <button onclick="filterSbCategory('02_Vinh_Danh')" class="sb-cat-tab" data-cat="02_Vinh_Danh">
-                                    <span>🏆 Vinh Danh</span> <span class="sb-cat-num">14</span>
-                                </button>
-                                <button onclick="filterSbCategory('03_Nhac_Chiem_Nghiem')" class="sb-cat-tab" data-cat="03_Nhac_Chiem_Nghiem">
-                                    <span>☕ Chiêm Nghiệm</span> <span class="sb-cat-num">21</span>
-                                </button>
-                                <button onclick="filterSbCategory('07_Nhac_Tinh_Yeu')" class="sb-cat-tab" data-cat="07_Nhac_Tinh_Yeu">
-                                    <span>💖 Tình Yêu</span> <span class="sb-cat-num">12</span>
-                                </button>
-                                <button onclick="filterSbCategory('04_Nhac_Buon')" class="sb-cat-tab" data-cat="04_Nhac_Buon">
-                                    <span>💔 Nhạc Buồn</span> <span class="sb-cat-num">21</span>
-                                </button>
-                                <button onclick="filterSbCategory('05_Tin_Giai_Tri_Meme')" class="sb-cat-tab" data-cat="05_Tin_Giai_Tri_Meme">
-                                    <span>🎭 Meme</span> <span class="sb-cat-num">17</span>
-                                </button>
-                                <button onclick="filterSbCategory('06_Tin_Giai_Tri_Trend_Showbiz')" class="sb-cat-tab" data-cat="06_Tin_Giai_Tri_Trend_Showbiz">
-                                    <span>✨ Showbiz</span> <span class="sb-cat-num">23</span>
+                                <button onclick="setSbViewMode('list')" id="sbBtnViewList" class="sb-view-toggle-btn !p-1.5 !px-2.5 !text-[11px]" title="Dạng thẻ danh sách">
+                                    <i class="fa-solid fa-list-ul"></i>
                                 </button>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-1">
-                            <span id="sbFilterResultCount">Hiển thị 119 / 119 sound</span>
-                            <span class="text-cyan-400 font-semibold"><i class="fa-solid fa-lightbulb"></i> Bấm nút tròn để phát / dừng • Phím Space tạm dừng</span>
+                    <!-- KHUNG TÌM KIẾM (Mặc định ẨN, chỉ hiện khi người dùng ấn vào nút Tìm Kiếm) -->
+                    <div id="sbSearchPanel" class="hidden mb-3.5 bg-slate-900/95 border border-cyan-500/40 rounded-2xl p-3 shadow-2xl backdrop-blur-md animate-[scaleUp_0.15s_ease-out]">
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-cyan-400 text-sm"></i>
+                            <input type="text" id="sbSearchInput" oninput="handleSbSearch(this.value)" 
+                                   placeholder="Gõ tên bài hát, chủ đề, meme, ca sĩ..."
+                                   class="w-full bg-slate-950 text-white placeholder-slate-400 text-sm rounded-xl pl-10 pr-20 py-2.5 border border-slate-700 focus:outline-none focus:border-cyan-400 transition shadow-inner">
+                            <div class="absolute right-2 flex items-center gap-1">
+                                <button onclick="clearSbSearch()" 
+                                        class="w-7 h-7 rounded-lg text-slate-400 hover:text-white flex items-center justify-center text-xs cursor-pointer" title="Xóa từ khóa">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <button onclick="toggleSbSearchPanel(false)" 
+                                        class="px-2.5 py-1 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700" title="Đóng tìm kiếm">
+                                    Đóng
+                                </button>
+                            </div>
                         </div>
                     </div>
 

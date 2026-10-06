@@ -342,9 +342,57 @@
         }
     };
 
+    // Bật/tắt thanh tìm kiếm (chỉ mở khi người dùng bấm nút Tìm kiếm)
+    window.toggleSbSearchPanel = function(forceOpen) {
+        const panel = document.getElementById('sbSearchPanel');
+        const btn = document.getElementById('sbBtnToggleSearch');
+        const input = document.getElementById('sbSearchInput');
+        if (!panel) return;
+
+        const willOpen = (typeof forceOpen === 'boolean') ? forceOpen : panel.classList.contains('hidden');
+        if (willOpen) {
+            panel.classList.remove('hidden');
+            if (btn) {
+                btn.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+                btn.classList.remove('bg-slate-800/90', 'text-slate-200');
+            }
+            if (input) {
+                setTimeout(() => input.focus(), 60);
+            }
+        } else {
+            panel.classList.add('hidden');
+            if (btn && !SoundboardState.searchQuery) {
+                btn.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+                btn.classList.add('bg-slate-800/90', 'text-slate-200');
+            }
+        }
+    };
+
+    window.clearSbSearch = function() {
+        const input = document.getElementById('sbSearchInput');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+        handleSbSearch('');
+    };
+
     // Search filter
     window.handleSbSearch = function(query) {
         SoundboardState.searchQuery = (query || '').trim().toLowerCase();
+        const btn = document.getElementById('sbBtnToggleSearch');
+        if (btn) {
+            if (SoundboardState.searchQuery) {
+                btn.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+                btn.classList.remove('bg-slate-800/90', 'text-slate-200');
+            } else {
+                const panel = document.getElementById('sbSearchPanel');
+                if (panel && panel.classList.contains('hidden')) {
+                    btn.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+                    btn.classList.add('bg-slate-800/90', 'text-slate-200');
+                }
+            }
+        }
         renderSoundboardGrid();
     };
 
@@ -409,10 +457,31 @@
             return true;
         });
 
+        // Cập nhật Badge tiêu đề thể loại đang chọn
+        const catMap = {
+            'ALL': { icon: '🌐', name: 'Tất cả' },
+            'FAVORITES': { icon: '❤️', name: 'Yêu Thích' },
+            '01_Tin_Tuc_Giat_Gan_Cang_Thang': { icon: '🚨', name: 'Giật Gân' },
+            '02_Vinh_Danh': { icon: '🏆', name: 'Vinh Danh' },
+            '03_Nhac_Chiem_Nghiem': { icon: '☕', name: 'Chiêm Nghiệm' },
+            '07_Nhac_Tinh_Yeu': { icon: '💖', name: 'Tình Yêu' },
+            '04_Nhac_Buon': { icon: '💔', name: 'Nhạc Buồn' },
+            '05_Tin_Giai_Tri_Meme': { icon: '🎭', name: 'Meme' },
+            '06_Tin_Giai_Tri_Trend_Showbiz': { icon: '✨', name: 'Showbiz' }
+        };
+
+        const currentCat = catMap[SoundboardState.activeCategory] || { icon: '🎵', name: SoundboardState.activeCategory };
+        const iconEl = document.getElementById('sbActiveCatIcon');
+        const nameEl = document.getElementById('sbActiveCatName');
+        const countEl = document.getElementById('sbActiveCatCount');
+        if (iconEl) iconEl.textContent = SoundboardState.searchQuery ? '🔍' : currentCat.icon;
+        if (nameEl) nameEl.textContent = SoundboardState.searchQuery ? `Tìm "${SoundboardState.searchQuery}"` : currentCat.name;
+        if (countEl) countEl.textContent = filtered.length;
+
         // Count display
         const countDisplay = document.getElementById('sbFilterResultCount');
         if (countDisplay) {
-            countDisplay.textContent = `Hiển thị ${filtered.length} / ${SOUNDBOARD_DATA.length} sound`;
+            countDisplay.textContent = `${filtered.length} / ${SOUNDBOARD_DATA.length} sound`;
         }
 
         if (filtered.length === 0) {
