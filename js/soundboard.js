@@ -324,7 +324,22 @@
                 tab.classList.remove('active');
             }
         });
+
+        // Tự động cuộn tab đang chọn ra giữa thanh trượt menu ở dưới
+        const activeBottomTab = document.querySelector(`#sbBottomSliderTrack .sb-cat-tab[data-cat="${catCode}"]`);
+        if (activeBottomTab) {
+            activeBottomTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
         renderSoundboardGrid();
+    };
+
+    // Nút cuộn trượt trái / phải cho thanh menu ở dưới
+    window.scrollSbBottomSlider = function(offset) {
+        const track = document.getElementById('sbBottomSliderTrack');
+        if (track) {
+            track.scrollBy({ left: offset, behavior: 'smooth' });
+        }
     };
 
     // Search filter
@@ -347,9 +362,13 @@
         const favCount = SoundboardState.favorites.size;
         const favBadge = document.getElementById('sbFavCountBadge');
         if (favBadge) favBadge.textContent = favCount;
+        const bFavBadge = document.getElementById('sbBottomFavCountBadge');
+        if (bFavBadge) bFavBadge.textContent = favCount;
 
         const totalEl = document.getElementById('sbTotalCountBadge');
         if (totalEl && Array.isArray(SOUNDBOARD_DATA)) totalEl.textContent = SOUNDBOARD_DATA.length;
+        const bTotalEl = document.getElementById('sbBottomTotalCountBadge');
+        if (bTotalEl && Array.isArray(SOUNDBOARD_DATA)) bTotalEl.textContent = SOUNDBOARD_DATA.length;
 
         if (Array.isArray(SOUNDBOARD_DATA)) {
             const counts = {};
@@ -546,11 +565,66 @@
 
     window.renderSoundboardGrid = renderSoundboardGrid;
 
+    // Điều khiển hiển thị và tương tác thanh trượt menu ở dưới
+    window.updateSbBottomBarVisibility = function(show) {
+        const bottomBar = document.getElementById('sbBottomStyleBar');
+        if (bottomBar) {
+            bottomBar.classList.toggle('hidden', !show);
+        }
+    };
+
+    function initBottomSliderUI() {
+        const track = document.getElementById('sbBottomSliderTrack');
+        if (track && !track._hasInitSliderEvents) {
+            track._hasInitSliderEvents = true;
+
+            // Lăn chuột ngang để trượt style nhanh
+            track.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    track.scrollLeft += e.deltaY * 0.9;
+                }
+            }, { passive: false });
+
+            // Kéo chuột trượt (drag-to-scroll) trên máy tính
+            let isDown = false;
+            let startX, scrollLeft;
+            track.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+            window.addEventListener('mouseup', () => { isDown = false; });
+            track.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                track.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Tự động kiểm tra hiển thị theo màn viewSoundboard
+        const sbView = document.getElementById('viewSoundboard');
+        const bottomBar = document.getElementById('sbBottomStyleBar');
+        if (sbView && bottomBar && !sbView._hasObserver) {
+            sbView._hasObserver = true;
+            const updateVisibility = () => {
+                const isActive = !sbView.classList.contains('hidden') && sbView.classList.contains('active');
+                bottomBar.classList.toggle('hidden', !isActive);
+            };
+            const obs = new MutationObserver(updateVisibility);
+            obs.observe(sbView, { attributes: true, attributeFilter: ['class'] });
+            updateVisibility();
+        }
+    }
+
     // Init on DOM ready
     function initSoundboard() {
         loadFavorites();
         updateCategoryCountBadges();
         renderSoundboardGrid();
+        initBottomSliderUI();
 
         // Keyboard navigation (Space to pause/play, Escape to stop)
         document.addEventListener('keydown', (e) => {

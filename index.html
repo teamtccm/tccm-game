@@ -1265,6 +1265,33 @@
             box-shadow: 0 6px 20px rgba(244, 63, 94, 0.45);
         }
 
+        /* Thanh trượt menu ở dưới để chọn style nhạc tiện lợi */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #sbBottomStyleBar {
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #sbBottomStyleBar.hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(24px) !important;
+            display: none !important;
+        }
+        #sbBottomSliderTrack {
+            touch-action: pan-x;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+        }
+        #sbBottomSliderTrack:active {
+            cursor: grabbing;
+        }
+        #sbBottomSliderTrack .sb-cat-tab {
+            font-size: 11.5px;
+            padding: 8px 14px;
+            border-radius: 14px;
+        }
+
         /* Sound Item Pad Card - Định hình rõ ràng từng sound */
         .sb-item {
             display: flex;
@@ -2547,9 +2574,7 @@
                     </div>
 
                     <!-- CONTAINER CHỨA NÚT 3D HOẶC LIST CARDS -->
-                    <div id="sbGridContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 pt-2">
-                        <!-- Rendered by js/soundboard.js -->
-                    </div>
+                    <div id="sbGridContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 pt-2 pb-16">
                         <!-- Rendered by js/soundboard.js -->
                     </div>
                 </div>
@@ -2559,8 +2584,56 @@
         </div>
     </div>
 
-    <!-- FLOATING MINI PLAYER FOR SOUNDBOARD -->
-    <div id="sbFloatingPlayer" class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto z-40 hidden pointer-events-auto">
+    <!-- BOTTOM FLOATING STYLE SLIDER MENU BAR (Thanh trượt menu ở dưới để lựa chọn style nhạc cho dễ) -->
+    <div id="sbBottomStyleBar" class="fixed bottom-3 left-0 right-0 z-40 px-3 pointer-events-none transition-all duration-300 hidden">
+        <div class="w-full max-w-xl mx-auto pointer-events-auto">
+            <div class="bg-slate-950/95 backdrop-blur-2xl border border-slate-700/80 shadow-[0_12px_45px_rgba(0,0,0,0.85)] rounded-2xl p-1.5 flex items-center gap-1.5">
+                <!-- Nút trượt trái -->
+                <button onclick="scrollSbBottomSlider(-160)" class="w-8 h-8 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-xs transition border border-slate-800 shrink-0 cursor-pointer shadow-sm active:scale-90" title="Trượt sang trái">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <!-- Thanh trượt ngang các Style nhạc -->
+                <div id="sbBottomSliderTrack" class="flex-1 flex items-center gap-2 overflow-x-auto scroll-smooth py-1 px-1 select-none no-scrollbar" style="scrollbar-width:none; -ms-overflow-style:none;">
+                    <button onclick="filterSbCategory('ALL')" class="sb-cat-tab active whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="ALL">
+                        <span>🌐 Tất cả</span> <span class="sb-cat-num" id="sbBottomTotalCountBadge">119</span>
+                    </button>
+                    <button onclick="filterSbCategory('FAVORITES')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="FAVORITES">
+                        <span>❤️ Yêu Thích</span> <span class="sb-cat-num" id="sbBottomFavCountBadge">0</span>
+                    </button>
+                    <button onclick="filterSbCategory('01_Tin_Tuc_Giat_Gan_Cang_Thang')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="01_Tin_Tuc_Giat_Gan_Cang_Thang">
+                        <span>🚨 Giật Gân</span> <span class="sb-cat-num">11</span>
+                    </button>
+                    <button onclick="filterSbCategory('02_Vinh_Danh')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="02_Vinh_Danh">
+                        <span>🏆 Vinh Danh</span> <span class="sb-cat-num">14</span>
+                    </button>
+                    <button onclick="filterSbCategory('03_Nhac_Chiem_Nghiem')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="03_Nhac_Chiem_Nghiem">
+                        <span>☕ Chiêm Nghiệm</span> <span class="sb-cat-num">21</span>
+                    </button>
+                    <button onclick="filterSbCategory('07_Nhac_Tinh_Yeu')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="07_Nhac_Tinh_Yeu">
+                        <span>💖 Tình Yêu</span> <span class="sb-cat-num">12</span>
+                    </button>
+                    <button onclick="filterSbCategory('04_Nhac_Buon')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="04_Nhac_Buon">
+                        <span>💔 Nhạc Buồn</span> <span class="sb-cat-num">21</span>
+                    </button>
+                    <button onclick="filterSbCategory('05_Tin_Giai_Tri_Meme')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="05_Tin_Giai_Tri_Meme">
+                        <span>🎭 Meme</span> <span class="sb-cat-num">17</span>
+                    </button>
+                    <button onclick="filterSbCategory('06_Tin_Giai_Tri_Trend_Showbiz')" class="sb-cat-tab whitespace-nowrap shrink-0 !py-2 !px-3.5 !text-xs !rounded-xl" data-cat="06_Tin_Giai_Tri_Trend_Showbiz">
+                        <span>✨ Showbiz</span> <span class="sb-cat-num">23</span>
+                    </button>
+                </div>
+
+                <!-- Nút trượt phải -->
+                <button onclick="scrollSbBottomSlider(160)" class="w-8 h-8 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-xs transition border border-slate-800 shrink-0 cursor-pointer shadow-sm active:scale-90" title="Trượt sang phải">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING MINI PLAYER FOR SOUNDBOARD (Nổi lên phía trên thanh trượt menu) -->
+    <div id="sbFloatingPlayer" class="fixed bottom-[74px] left-3 right-3 max-w-xl mx-auto z-40 hidden pointer-events-auto">
         <div class="bg-gray-900/95 backdrop-blur-xl border border-cyan-500/40 rounded-2xl p-3 px-4 shadow-2xl flex items-center gap-3 text-white">
             <button onclick="togglePlaySound(SoundboardState.currentPlayingId)" 
                     class="w-10 h-10 rounded-full bg-cyan-500 hover:bg-cyan-400 text-gray-950 flex items-center justify-center text-sm font-bold shadow-lg transition active:scale-95">
